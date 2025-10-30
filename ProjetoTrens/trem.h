@@ -3,21 +3,24 @@
 
 #include <QThread>
 #include <QMutex>
+#include <vector>
 
 /*
  * Classe Trem herda QThread
- * Classe Trem passa a ser uma thread.
- * A função START inicializa a thread. Após inicializada, a thread irá executar a função RUN.
- * Para parar a execução da função RUN da thread, basta executar a função TERMINATE.
- *
-*/
-class Trem: public QThread{
- Q_OBJECT
+ * Cada trem é uma thread que executa sua própria função RUN.
+ * As regiões críticas são controladas por mutexes estáticos compartilhados.
+ */
+
+class Trem : public QThread {
+    Q_OBJECT
 public:
-    Trem(int,int,int);
-    void run();
+    Trem(int, int, int);
+    void run() override;
     void setVelocidade(int);
-    
+
+    // Mutex global que serializa aquisições para evitar deadlocks
+    static QMutex arbiter;
+
     // Mutexes estáticos das 7 regiões críticas
     static QMutex *regiao1;
     static QMutex *regiao2;
@@ -27,19 +30,23 @@ public:
     static QMutex *regiao6;
     static QMutex *regiao7;
 
+    // Métodos auxiliares para travar/destravar múltiplas regiões de forma ordenada
+    static void lockRegions(const std::vector<int>& regs);
+    static void unlockRegions(const std::vector<int>& regs);
+
 signals:
-    void updateGUI(int,int,int);
+    void updateGUI(int, int, int);
 
 private:
-   int x;           //posição X do trem na tela
-   int y;           //posição Y do trem na tela
-   int ID;          //ID do trem
-   int velocidade;  //Velocidade. É o tempo de dormir em milisegundos entre a mudança de posição do trem
-   
-   void right();
-   void left();
-   void up();
-   void down();
+    int x;           // posição X do trem na tela
+    int y;           // posição Y do trem na tela
+    int ID;          // identificador do trem
+    int velocidade;  // tempo (ms) de espera entre movimentos
+
+    void right();
+    void left();
+    void up();
+    void down();
 };
 
 #endif // TREM_H

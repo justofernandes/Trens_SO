@@ -15,12 +15,12 @@ MainWindow::MainWindow(QWidget *parent) :
     Trem::regiao6 = &regiao6;
     Trem::regiao7 = &regiao7;
 
-    trem1 = new Trem(1, 60, 30);
+    trem1 = new Trem(1, 60, 80);
     trem2 = new Trem(2, 270, 30);
-    trem3 = new Trem(3, 480, 30);
-    trem4 = new Trem(4, 200, 280);
-    trem5 = new Trem(5, 340, 280);
-    trem6 = new Trem(6, 480, 30);
+    trem3 = new Trem(3, 480, 80);
+    trem4 = new Trem(4, 130, 210);
+    trem5 = new Trem(5, 410, 210);
+    trem6 = new Trem(6, 220, 280);
 
     connect(trem1, SIGNAL(updateGUI(int,int,int)), SLOT(updateInterface(int,int,int)));
     connect(trem2, SIGNAL(updateGUI(int,int,int)), SLOT(updateInterface(int,int,int)));
@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->horizontalSlider_4->setRange(0, 200);
     ui->horizontalSlider_5->setRange(0, 200);
     ui->horizontalSlider_6->setRange(0, 200);
-    
+
     ui->horizontalSlider->setValue(100);
     ui->horizontalSlider_2->setValue(100);
     ui->horizontalSlider_3->setValue(100);
@@ -84,14 +84,14 @@ MainWindow::~MainWindow()
     trem4->terminate();
     trem5->terminate();
     trem6->terminate();
-    
+
     trem1->wait();
     trem2->wait();
     trem3->wait();
     trem4->wait();
     trem5->wait();
     trem6->wait();
-    
+
     delete ui;
 }
 
